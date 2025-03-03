@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Conversor de Moedas 💰</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .converter-box {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 2rem;
+        }
+
+        .title {
+            color: #2d3436;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .affiliate-section {
+            background: #ffeaa7;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        #convertBtn {
+            transition: transform 0.3s ease;
+            background: #ff7675;
+            color: white;
+            font-weight: bold;
+        }
+
+        #convertBtn:hover {
+            transform: translateY(-2px);
+        }
+
+        .result-box {
+            background: #74b9ff;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="converter-box">
+            <h1 class="title is-2 has-text-centered mb-6">💸 Conversor Global Instantâneo</h1>
+            
+            <div class="field">
+                <label class="label">Valor</label>
+                <input id="amount" class="input is-large" type="number" placeholder="Digite o valor" value="1">
+            </div>
+
+            <div class="columns">
+                <div class="column">
+                    <label class="label">De:</label>
+                    <div class="select is-fullwidth">
+                        <select id="baseCurrency" class="is-medium"></select>
+                    </div>
+                </div>
+                
+                <div class="column">
+                    <label class="label">Para:</label>
+                    <div class="select is-fullwidth">
+                        <select id="targetCurrency" class="is-medium"></select>
+                    </div>
+                </div>
+            </div>
+
+            <button id="convertBtn" class="button is-fullwidth is-large">Converter Agora!</button>
+
+            <div id="result" class="result-box has-text-centered is-size-4 mt-4"></div>
+
+            <!-- Seção de Afiliados -->
+            <div class="affiliate-section">
+                <h3 class="title is-5 has-text-centered mb-4">💡 Dicas Financeiras Exclusivas</h3>
+                <div class="columns">
+                    <div class="column">
+                        <a href="#link-afiliado-1" class="button is-info is-fullwidth">
+                            📈 Invista como Expert!
+                        </a>
+                    </div>
+                    <div class="column">
+                        <a href="#link-afiliado-2" class="button is-success is-fullwidth">
+                            ✈️ Ganhe US$ para Viajar!
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Carrega lista de moedas
+        async function loadCurrencies() {
+            try {
+                const response = await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies.min.json');
+                const currencies = await response.json();
+                
+                const baseSelect = document.getElementById('baseCurrency');
+                const targetSelect = document.getElementById('targetCurrency');
+                
+                for (const [code, name] of Object.entries(currencies)) {
+                    const option = document.createElement('option');
+                    option.value = code;
+                    option.textContent = `${code.toUpperCase()} - ${name}`;
+                    
+                    baseSelect.appendChild(option.cloneNode(true));
+                    targetSelect.appendChild(option);
+                }
+                
+                // Define BRL como padrão
+                baseSelect.value = 'brl';
+            } catch (error) {
+                console.error('Erro ao carregar moedas:', error);
+            }
+        }
+
+        // Realiza conversão
+        async function convertCurrency() {
+            const amount = document.getElementById('amount').value;
+            const base = document.getElementById('baseCurrency').value;
+            const target = document.getElementById('targetCurrency').value;
+            
+            if (!amount || !base || !target) return;
+
+            try {
+                const response = await fetch(`https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/${base}.json`);
+                const data = await response.json();
+                
+                const rate = data[base][target];
+                const result = (amount * rate).toFixed(2);
+                
+                document.getElementById('result').innerHTML = `
+                    ${amount} ${base.toUpperCase()} = 
+                    <strong>${result} ${target.toUpperCase()}</strong>
+                `;
+            } catch (error) {
+                console.error('Erro na conversão:', error);
+                document.getElementById('result').innerHTML = "Erro na conversão. Tente novamente!";
+            }
+        }
+
+        // Event Listeners
+        document.getElementById('convertBtn').addEventListener('click', convertCurrency);
+        document.addEventListener('DOMContentLoaded', loadCurrencies);
+    </script>
+</body>
+</html>
