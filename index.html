@@ -1,159 +1,273 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Conversor de Moedas 💰</title>
+    <title>Global Currency Converter | Real-Time Exchange Rates & Financial Tools</title>
+    <meta name="description" content="Instant currency conversion with live exchange rates. Compare 200+ currencies, get financial tips, and manage international money transfers effectively. Free financial tools and investment guides.">
+    <meta name="keywords" content="currency converter, exchange rates, money converter, financial tools, forex calculator, investment tips">
+    <meta property="og:title" content="Global Currency Converter | Real-Time Exchange Rates">
+    <meta property="og:description" content="Free instant currency conversion with live rates. Essential tools for travelers, investors, and global businesses.">
+    <meta property="og:image" content="https://example.com/currency-converter-thumbnail.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="https://example.com/currency-converter">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #ff4757;
+            --secondary-color: #2ed573;
+            --accent-color: #3742fa;
+        }
+
         body {
-            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             min-height: 100vh;
             padding: 2rem;
         }
         
         .converter-box {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            padding: 2rem;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            padding: 2.5rem;
+            margin: 2rem auto;
         }
 
         .title {
             color: #2d3436;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem !important;
         }
 
         .affiliate-section {
-            background: #ffeaa7;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-top: 2rem;
+            background: linear-gradient(45deg, #fff200, #fffa65);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 3rem;
+            border: 3px dashed var(--accent-color);
         }
 
         #convertBtn {
-            transition: transform 0.3s ease;
-            background: #ff7675;
+            transition: all 0.3s ease;
+            background: var(--accent-color);
             color: white;
-            font-weight: bold;
-        }
-
-        #convertBtn:hover {
-            transform: translateY(-2px);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .result-box {
-            background: #74b9ff;
-            color: white;
+            background: rgba(55, 66, 250, 0.1);
+            color: var(--accent-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            border: 2px solid var(--accent-color);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
             padding: 1rem;
-            border-radius: 8px;
-            margin-top: 1rem;
+            color: var(--primary-color);
+        }
+
+        .rate-info {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        .swap-button {
+            margin: 1rem auto;
+            display: block;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--primary-color);
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="converter-box">
-            <h1 class="title is-2 has-text-centered mb-6">💸 Conversor Global Instantâneo</h1>
+            <h1 class="title is-2 has-text-centered mb-6">🌍 Global Currency Converter</h1>
             
             <div class="field">
-                <label class="label">Valor</label>
-                <input id="amount" class="input is-large" type="number" placeholder="Digite o valor" value="1">
+                <label class="label">Amount</label>
+                <div class="control has-icons-left">
+                    <input id="amount" class="input is-large" type="number" placeholder="Enter amount" value="1" min="0">
+                    <span class="icon is-left">
+                        <i class="fas fa-coins"></i>
+                    </span>
+                </div>
             </div>
 
-            <div class="columns">
+            <div class="columns is-vcentered">
                 <div class="column">
-                    <label class="label">De:</label>
-                    <div class="select is-fullwidth">
-                        <select id="baseCurrency" class="is-medium"></select>
+                    <label class="label">From:</label>
+                    <div class="select is-fullwidth is-medium">
+                        <select id="baseCurrency"></select>
                     </div>
                 </div>
                 
+                <div class="column has-text-centered">
+                    <button class="swap-button" id="swapCurrencies" title="Swap currencies">
+                        <i class="fas fa-exchange-alt fa-2x"></i>
+                    </button>
+                </div>
+
                 <div class="column">
-                    <label class="label">Para:</label>
-                    <div class="select is-fullwidth">
-                        <select id="targetCurrency" class="is-medium"></select>
+                    <label class="label">To:</label>
+                    <div class="select is-fullwidth is-medium">
+                        <select id="targetCurrency"></select>
                     </div>
                 </div>
             </div>
 
-            <button id="convertBtn" class="button is-fullwidth is-large">Converter Agora!</button>
+            <div class="loading" id="loading">
+                <i class="fas fa-spinner fa-pulse"></i> Getting live rates...
+            </div>
 
-            <div id="result" class="result-box has-text-centered is-size-4 mt-4"></div>
+            <button id="convertBtn" class="button is-fullwidth is-large">Convert Now</button>
 
-            <!-- Seção de Afiliados -->
+            <div id="result" class="result-box has-text-centered is-size-4"></div>
+            <div id="rateInfo" class="rate-info has-text-centered"></div>
+
+            <!-- Affiliate Section -->
             <div class="affiliate-section">
-                <h3 class="title is-5 has-text-centered mb-4">💡 Dicas Financeiras Exclusivas</h3>
+                <h3 class="title is-5 has-text-centered mb-4">💰 Premium Financial Services</h3>
                 <div class="columns">
                     <div class="column">
-                        <a href="#link-afiliado-1" class="button is-info is-fullwidth">
-                            📈 Invista como Expert!
+                        <a href="#affiliate1" class="button is-info is-fullwidth has-text-left">
+                            <span class="icon"><i class="fas fa-chart-line"></i></span>
+                            <span>Best Investment Platforms →</span>
                         </a>
                     </div>
                     <div class="column">
-                        <a href="#link-afiliado-2" class="button is-success is-fullwidth">
-                            ✈️ Ganhe US$ para Viajar!
+                        <a href="#affiliate2" class="button is-success is-fullwidth has-text-left">
+                            <span class="icon"><i class="fas fa-plane-departure"></i></span>
+                            <span>Travel Money Cards →</span>
                         </a>
                     </div>
+                </div>
+                <div class="has-text-centered mt-3">
+                    <small class="has-text-grey">Partner offers that support our free service</small>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Carrega lista de moedas
+        // Enhanced Currency Converter
+        let currencies = {};
+        let lastUpdate = null;
+
         async function loadCurrencies() {
             try {
                 const response = await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies.min.json');
-                const currencies = await response.json();
+                currencies = await response.json();
                 
-                const baseSelect = document.getElementById('baseCurrency');
-                const targetSelect = document.getElementById('targetCurrency');
+                populateSelect(document.getElementById('baseCurrency'), currencies);
+                populateSelect(document.getElementById('targetCurrency'), currencies);
                 
-                for (const [code, name] of Object.entries(currencies)) {
-                    const option = document.createElement('option');
-                    option.value = code;
-                    option.textContent = `${code.toUpperCase()} - ${name}`;
-                    
-                    baseSelect.appendChild(option.cloneNode(true));
-                    targetSelect.appendChild(option);
-                }
+                // Set default currencies
+                document.getElementById('baseCurrency').value = 'brl';
+                document.getElementById('targetCurrency').value = 'usd';
                 
-                // Define BRL como padrão
-                baseSelect.value = 'brl';
+                // Set last updated time
+                lastUpdate = new Date().toLocaleString();
             } catch (error) {
-                console.error('Erro ao carregar moedas:', error);
+                showError('Failed to load currency list. Please refresh the page.');
             }
         }
 
-        // Realiza conversão
+        function populateSelect(select, data) {
+            select.innerHTML = Object.entries(data)
+                .sort((a, b) => a[1].localeCompare(b[1]))
+                .map(([code, name]) => 
+                    `<option value="${code}">${code.toUpperCase()} - ${name}</option>`
+                ).join('');
+        }
+
         async function convertCurrency() {
-            const amount = document.getElementById('amount').value;
+            const amount = parseFloat(document.getElementById('amount').value);
             const base = document.getElementById('baseCurrency').value;
             const target = document.getElementById('targetCurrency').value;
             
-            if (!amount || !base || !target) return;
+            if (!amount || amount <= 0) {
+                showError('Please enter a valid amount');
+                return;
+            }
 
             try {
+                showLoading(true);
                 const response = await fetch(`https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/${base}.json`);
                 const data = await response.json();
                 
+                if (!data[base]?.[target]) {
+                    showError('Conversion rate not available');
+                    return;
+                }
+
                 const rate = data[base][target];
-                const result = (amount * rate).toFixed(2);
-                
+                const result = (amount * rate).toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: target
+                });
+
                 document.getElementById('result').innerHTML = `
-                    ${amount} ${base.toUpperCase()} = 
-                    <strong>${result} ${target.toUpperCase()}</strong>
+                    <span class="has-text-weight-bold">${amount.toLocaleString()} ${base.toUpperCase()}</span>
+                    <div class="is-size-5">=</div>
+                    <span class="has-text-weight-bold">${result}</span>
+                `;
+
+                document.getElementById('rateInfo').innerHTML = `
+                    1 ${base.toUpperCase()} = ${rate.toFixed(6)} ${target.toUpperCase()}<br>
+                    <small>Last updated: ${lastUpdate}</small>
                 `;
             } catch (error) {
-                console.error('Erro na conversão:', error);
-                document.getElementById('result').innerHTML = "Erro na conversão. Tente novamente!";
+                showError('Conversion failed. Please try again later.');
+            } finally {
+                showLoading(false);
             }
+        }
+
+        // UI Functions
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+
+        function showError(message) {
+            document.getElementById('result').innerHTML = `
+                <div class="has-text-danger">
+                    <i class="fas fa-exclamation-triangle"></i> ${message}
+                </div>
+            `;
         }
 
         // Event Listeners
         document.getElementById('convertBtn').addEventListener('click', convertCurrency);
-        document.addEventListener('DOMContentLoaded', loadCurrencies);
+        document.getElementById('swapCurrencies').addEventListener('click', () => {
+            const base = document.getElementById('baseCurrency');
+            const target = document.getElementById('targetCurrency');
+            [base.value, target.value] = [target.value, base.value];
+            convertCurrency();
+        });
+
+        // Auto-convert on input/select change
+        ['input', 'change'].forEach(event => {
+            document.getElementById('amount').addEventListener(event, convertCurrency);
+            document.getElementById('baseCurrency').addEventListener(event, convertCurrency);
+            document.getElementById('targetCurrency').addEventListener(event, convertCurrency);
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCurrencies();
+            convertCurrency();
+        });
     </script>
 </body>
 </html>
