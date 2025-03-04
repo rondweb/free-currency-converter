@@ -114,15 +114,32 @@
         cursor: pointer;
         color: var(--primary-color);
       }
+
+      .top-right-banner {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 1000;
+      }
     </style>
   </head>
   <body>
+    <div class="top-right-banner" style="width: 300px">
+      <a
+        href="https://0c063gy9qsp72k3hj6jsk50524.hop.clickbank.net"
+        target="_blank"
+      >
+        <img
+          src="https://raw.githubusercontent.com/rondweb/cdn-leaftix/refs/heads/main/affiliate/Untitled-Design.png"
+          alt="Affiliate Banner"
+        />
+      </a>
+    </div>
     <div class="container">
       <div class="converter-box">
         <h1 class="title is-2 has-text-centered mb-6">
           🌍 Global Currency Converter
         </h1>
-
         <div class="field">
           <label class="label">Amount</label>
           <div class="control has-icons-left">
@@ -176,38 +193,82 @@
 
         <div id="result" class="result-box has-text-centered is-size-4"></div>
         <div id="rateInfo" class="rate-info has-text-centered"></div>
-
-        <!-- Affiliate Section -->
-        <div class="affiliate-section">
-          <h3 class="title is-5 has-text-centered mb-4">
-            💰 Premium Financial Services
-          </h3>
-          <div class="columns">
-            <div class="column">
-              <a
-                href="#affiliate1"
-                class="button is-info is-fullwidth has-text-left"
-              >
-                <span class="icon"><i class="fas fa-chart-line"></i></span>
-                <span>Best Investment Platforms →</span>
-              </a>
+        <div class="has-text-centered mt-5">
+          <!-- Affiliate Section -->
+          <div
+            class="affiliate-section blink-bg"
+            style="background: linear-gradient(45deg, #ff9ff3, #feca57)"
+          >
+            <h3 class="title is-5 has-text-centered mb-4">
+              💰 Premium Financial Services
+            </h3>
+            <div class="columns is-multiline">
+              <div class="column is-half">
+          <a
+            href="https://0c063gy9qsp72k3hj6jsk50524.hop.clickbank.net"
+            target="_blank"
+            class="button is-info is-fullwidth has-text-left"
+          >
+            <span class="icon"><i class="fas fa-chart-line"></i></span>
+            <span>Best Investment Platforms</span>
+          </a>
+          <a
+            href="https://0c063gy9qsp72k3hj6jsk50524.hop.clickbank.net"
+            target="_blank"
+          >
+            <img
+              src="https://raw.githubusercontent.com/rondweb/cdn-leaftix/refs/heads/main/affiliate/remixable-banners_feb2022/small-banner3.png"
+              alt="Best Investment Platforms"
+              class="mt-2"
+              style="width: 100%; border-radius: 10px"
+          /></a>
+              </div>
+              <div class="column is-half">
+          <a
+            href="https://68638lvisgq0cwddyiw4gpbrbn.hop.clickbank.net"
+            target="_blank"
+            class="button is-success is-fullwidth has-text-left"
+          >
+            <span class="icon"><i class="fas fa-piggy-bank"></i></span>
+            <span>Top Financial Advisors</span>
+          </a>
+          <a
+            href="https://68638lvisgq0cwddyiw4gpbrbn.hop.clickbank.net"
+            target="_blank"
+          >
+            <img
+              src="https://raw.githubusercontent.com/rondweb/cdn-leaftix/refs/heads/main/affiliate/remixable-banners_feb2022/small-banner2.png"
+              alt="Top Financial Advisors"
+              class="mt-2"
+              style="width: 100%; border-radius: 10px"
+          /></a>
+              </div>
             </div>
-            <div class="column">
-              <a
-                href="#affiliate2"
-                class="button is-success is-fullwidth has-text-left"
+            <div class="has-text-centered mt-3">
+              <small class="has-text-grey"
+          >Partner offers that support our free service</small
               >
-                <span class="icon"><i class="fas fa-plane-departure"></i></span>
-                <span>Travel Money Cards →</span>
-              </a>
             </div>
-          </div>
-          <div class="has-text-centered mt-3">
-            <small class="has-text-grey"
-              >Partner offers that support our free service</small
-            >
           </div>
         </div>
+
+        <style>
+          @keyframes blink {
+            0% {
+              background-color: #ff9ff3;
+            }
+            50% {
+              background-color: #feca57;
+            }
+            100% {
+              background-color: #ff9ff3;
+            }
+          }
+
+          .blink-bg {
+            animation: blink 2s infinite;
+          }
+        </style>
       </div>
     </div>
 
